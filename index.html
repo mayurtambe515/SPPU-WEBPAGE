@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduSPPU 2024 - Complete Study Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0",
+    "@testing-library/jest-dom": "https://aistudiocdn.com/@testing-library/jest-dom@^6.9.1",
+    "@testing-library/react": "https://aistudiocdn.com/@testing-library/react@^16.3.0",
+    "@jest/globals": "https://aistudiocdn.com/@jest/globals@^30.2.0"
+  }
+}
+</script>
+ <style>
+    :root {
+      --radius: 0.5rem;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --transition-fast: all 0.2s ease-in-out;
+    }
+    
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Modal Animation */
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-content {
+      animation: fadeInScale 0.2s ease-out forwards;
+    }
+
+    /* Modern Form Styles */
+    .form-input, .form-select, .form-textarea {
+        display: block;
+        width: 100%;
+        padding: 0.65rem 0.75rem;
+        border: 1px solid #D1D5DB; /* gray-300 */
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-fast);
+        background-color: transparent;
+    }
+    .dark .form-input, .dark .form-select, .dark .form-textarea {
+        border-color: #4B5563; /* gray-600 */
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        outline: none;
+        border-color: #6366F1; /* indigo-500 */
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    }
+    
+    /* Global Button Style (can be overridden by Tailwind classes) */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+    .btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+      }
+      h1, .text-4xl {
+        font-size: 2.25rem; /* ~36px */
+      }
+       h2, .text-3xl {
+        font-size: 1.875rem; /* ~30px */
+      }
+    }
+  </style>
+</head>
+  <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

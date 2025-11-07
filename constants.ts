@@ -1,4 +1,4 @@
-import { Branch, Year, Material, MaterialType, ForumPost, StudyTask, Notification } from './types';
+import { Branch, Year, Material, MaterialType, ForumPost, StudyTask, Notification, HomeGridCard } from './types';
 
 export const branches: Branch[] = [
   Branch.Computer,
@@ -17,6 +17,17 @@ export const years: Year[] = [
 ];
 
 export const materialTypes: (MaterialType | 'All')[] = ['All', ...Object.values(MaterialType)];
+
+export const homeGridCards: HomeGridCard[] = [
+    { id: 'fe-2024', title: 'SPPU FE ENGG 2024 PATTERN', bgColor: 'bg-blue-500', view: 'materials' },
+    { id: 'fe-2019', title: 'SPPU FE ENGG 2019 PATTERN', bgColor: 'bg-yellow-500', view: 'materials' },
+    { id: 'se-comp', title: 'SPPU SE COMP & AI&DS IMP SOL', bgColor: 'bg-green-500', view: 'materials' },
+    { id: 'se-entc', title: 'SPPU SE E&TC & ELEC ENGG IMP SOL', bgColor: 'bg-pink-500', view: 'materials' },
+    { id: 'se-it', title: 'SPPU SE IT & OTHER', bgColor: 'bg-red-500', view: 'materials' },
+    { id: 'se-mech', title: 'SPPU SE MECH & CIVIL ENGG', bgColor: 'bg-purple-500', view: 'materials' },
+    { id: 'te', title: 'SPPU THIRD YEAR ENGG', bgColor: 'bg-cyan-500', view: 'materials' },
+    { id: 'be', title: 'SPPU LAST YEAR ENGG', bgColor: 'bg-teal-500', view: 'materials' },
+];
 
 export const materials: Material[] = [
   {

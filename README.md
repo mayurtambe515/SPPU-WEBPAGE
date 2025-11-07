@@ -1,8 +1,8 @@
-# EduSPPU 2024 - Complete Study Platform
+# EDUSPPU 2024 - Complete Study Platform
 
 ## 1. Objective
 
-EduSPPU 2024 is a modern, all-in-one web application designed to be the ultimate study companion for engineering students at Savitribai Phule Pune University (SPPU) following the 2024 curriculum pattern. The platform provides centralized access to study materials, a personal note-taking system, and an intelligent AI assistant to streamline the learning process.
+EDUSPPU 2024 is a modern, all-in-one web application designed to be the ultimate study companion for engineering students at Savitribai Phule Pune University (SPPU) following the 2024 curriculum pattern. The platform provides centralized access to study materials, a personal note-taking system, and an intelligent AI assistant to streamline the learning process.
 
 This project demonstrates a feature-rich, responsive, and accessible frontend application built with React and TypeScript, simulating a full-stack experience with client-side state management.
 

@@ -1,10 +1,11 @@
 
+
 import React, { useState } from 'react';
 
 interface AdminLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogin: (email: string) => void;
+  onLogin: (email: string, password: string) => void;
 }
 
 export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClose, onLogin }) => {
@@ -13,7 +14,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ isOpen, onClos
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(email);
+    onLogin(email, password);
   };
 
   if (!isOpen) return null;

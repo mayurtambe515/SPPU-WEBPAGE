@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduSPPU 2024 - Complete Study Platform</title>
+    <title>EDUSPPU 2024 - SPPU Study Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="importmap">
 {
@@ -21,16 +21,79 @@
 </script>
  <style>
     :root {
-      --radius: 0.5rem;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      /* New Color Palette */
+      --primary: #007BFF;
+      --primary-dark: #0056b3;
+      --header-start: #007BFF;
+      --header-end: #0056b3;
+      --text-light: #F8F9FA;
+      --text-dark: #343A40;
+      
+      --radius: 0.75rem; /* Slightly larger radius */
+      --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.1), 0 2px 6px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 20px -3px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.1);
       --transition-fast: all 0.2s ease-in-out;
     }
     
     body {
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      /* Account for bottom nav bar */
+      padding-bottom: 60px;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #ffffff;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 40;
+    }
+    .dark .bottom-nav {
+      background-color: #1f2937; /* gray-800 */
+      border-top-color: #374151; /* gray-700 */
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #6b7280; /* gray-500 */
+      transition: var(--transition-fast);
+    }
+    .nav-item.active {
+      color: var(--primary);
+    }
+    .dark .nav-item.active {
+      color: #60a5fa; /* blue-400 */
+    }
+
+
+    /* Home Grid Card Styles */
+    .home-grid-card {
+      padding: 1rem;
+      border-radius: var(--radius);
+      color: white;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease-in-out;
+    }
+    .home-grid-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
     }
 
     /* Modal Animation */
@@ -58,26 +121,10 @@
     }
     .form-input:focus, .form-select:focus, .form-textarea:focus {
         outline: none;
-        border-color: #6366F1; /* indigo-500 */
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
     }
     
-    /* Global Button Style (can be overridden by Tailwind classes) */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      font-weight: 500;
-      transition: var(--transition-fast);
-      cursor: pointer;
-    }
-    .btn:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4);
-    }
-
     /* Responsive adjustments */
     @media (max-width: 768px) {
       .container {

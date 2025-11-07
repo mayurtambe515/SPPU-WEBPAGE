@@ -52,9 +52,10 @@ export interface User {
   role: 'admin' | 'user';
   name: string;
   avatar: string;
+  adminEmail?: string;
 }
 
-export type View = 'home' | 'dashboard' | 'materials' | 'notes' | 'questionBank' | 'forum' | 'downloads' | 'planner' | 'profile' | 'admin' | 'addEditNote';
+export type View = 'home' | 'dashboard' | 'materials' | 'notes' | 'questionBank' | 'forum' | 'downloads' | 'planner' | 'profile' | 'admin' | 'addEditNote' | 'settings' | 'howToUse' | 'privacyPolicy';
 
 export type Theme = 'light' | 'dark';
 
@@ -89,4 +90,11 @@ export interface Notification {
     message: string;
     timestamp: string;
     isRead: boolean;
+}
+
+export interface HomeGridCard {
+    id: string;
+    title: string;
+    bgColor: string;
+    view: View;
 }

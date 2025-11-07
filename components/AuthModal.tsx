@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 
 interface AuthModalProps {
@@ -6,9 +7,10 @@ interface AuthModalProps {
   onClose: () => void;
   onLogin: (email: string, password: string) => boolean;
   onRegister: (email: string, password: string) => boolean;
+  registrationsEnabled: boolean;
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegister }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, onRegister, registrationsEnabled }) => {
   const [isLoginView, setIsLoginView] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -119,9 +121,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onLogin, 
           </div>
         </form>
          <div className="mt-4 text-center">
-             <button onClick={() => setIsLoginView(!isLoginView)} className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-                 {isLoginView ? "Don't have an account? Register" : "Already have an account? Login"}
-             </button>
+             {registrationsEnabled && (
+                <button onClick={() => setIsLoginView(!isLoginView)} className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+                    {isLoginView ? "Don't have an account? Register" : "Already have an account? Login"}
+                </button>
+             )}
          </div>
       </div>
     </div>

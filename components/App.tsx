@@ -1,26 +1,30 @@
-
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Header } from './components/Header';
-import { Sidebar } from './components/Sidebar';
-import { MaterialsList } from './components/MaterialsList';
-import { AIAssistant } from './components/AIAssistant';
-import { Branch, Year, MaterialType, Material, User, View, ToastNotification } from './types';
-import { materials as initialMaterials } from './constants';
-import { AuthModal } from './components/AuthModal';
-import { UploadModal } from './components/UploadModal';
-import { Dashboard } from './components/Dashboard';
-import { Forum } from './components/Forum';
-import { AdminDashboard } from './components/AdminDashboard';
-import { Hero } from './components/Hero';
-import { DownloadsPage } from './components/DownloadsPage';
-import { Toast } from './components/Toast';
-import { Footer } from './components/Footer';
-import { AdminLoginModal } from './components/AdminLoginModal';
-import { AddEditNoteForm } from './components/AddEditNoteForm';
+import { Header } from './Header';
+import { MaterialsList } from './MaterialsList';
+import { AIAssistant } from './AIAssistant';
+import { Branch, Year, MaterialType, Material, User, View, ToastNotification } from '../types';
+import { materials as initialMaterials } from '../constants';
+import { AuthModal } from './AuthModal';
+import { UploadModal } from './UploadModal';
+import { Dashboard } from './Dashboard';
+import { Forum } from './Forum';
+import { AdminDashboard } from './AdminDashboard';
+import { DownloadsPage } from './DownloadsPage';
+import { Toast } from './Toast';
+import { AdminLoginModal } from './AdminLoginModal';
+import { AddEditNoteForm } from './AddEditNoteForm';
+import { BottomNavBar } from './BottomNavBar';
+import { HomeContent } from './HomeContent';
+import { ProfilePage } from './ProfilePage';
+import { UnauthorizedAccess } from './UnauthorizedAccess';
+import { SettingsPage } from './SettingsPage';
+import { HowToUsePage } from './HowToUsePage';
+import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 
 // In a real app, this would be an empty array, and users would be fetched from a DB.
 const initialUsers: User[] = [
-    { email: 'student@sppu.com', password: 'password123', role: 'user', name: 'Student User', avatar: `https://api.dicebear.com/8.x/initials/svg?seed=student@sppu.com` }
+    { email: 'student@sppu.com', password: 'password123', role: 'user', name: 'Mayur Tambe', avatar: `https://api.dicebear.com/8.x/initials/svg?seed=Mayur Tambe` },
+    { email: 'admin@sppu.com', password: 'Admin@Pass123', role: 'admin', name: 'Admin User', avatar: `https://api.dicebear.com/8.x/initials/svg?seed=Admin`, adminEmail: 'admin@sppu.com' }
 ];
 
 const NOTES_PER_PAGE = 6;
@@ -31,7 +35,6 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [currentView, setCurrentView] = useState<View>('home');
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -40,6 +43,11 @@ function App() {
     }
     return 'light';
   });
+
+  // Global Settings (Managed by Admin)
+  const [announcement, setAnnouncement] = useState<{ message: string; active: boolean }>({ message: '', active: false });
+  const [registrationsEnabled, setRegistrationsEnabled] = useState<boolean>(true);
+
 
   // Global search from Hero
   const [searchTerm, setSearchTerm] = useState('');
@@ -186,7 +194,7 @@ function App() {
       
       setCurrentUser(user);
       setIsAuthModalOpen(false);
-      setCurrentView('dashboard');
+      setCurrentView('home');
       showToast(`Welcome, ${user.name}!`, 'success');
       return true;
     } else {
@@ -217,12 +225,13 @@ function App() {
     return handleUserLogin(email, password);
   };
   
-  const handleAdminLogin = (email: string) => {
-    if (email.toLowerCase() !== 'admin@sppu.com') {
+  const handleAdminLogin = (email: string, password: string) => {
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.role === 'admin');
+    if (!user || user.password !== password) {
         showToast('Invalid admin credentials.', 'error');
         return;
     }
-    setCurrentUser({ email, role: 'admin', name: 'Admin User', avatar: `https://api.dicebear.com/8.x/initials/svg?seed=${email}` });
+    setCurrentUser(user);
     setIsAdminLoginModalOpen(false);
     setCurrentView('admin');
     showToast(`Welcome, Admin!`, 'success');
@@ -265,6 +274,18 @@ function App() {
     setEditingNoteId(null);
     setCurrentView('addEditNote');
   };
+  
+  const handleUserRoleChange = (email: string, newRole: 'admin' | 'user') => {
+    setUsers(users.map(u => u.email === email ? { ...u, role: newRole } : u));
+    // If an admin demotes themselves, update their current session
+    if (currentUser?.email === email && currentUser.role !== newRole) {
+        setCurrentUser(prev => prev ? { ...prev, role: newRole } : null);
+        if (newRole === 'user') {
+            setCurrentView('profile'); // Move them out of admin view
+        }
+    }
+    showToast(`User role updated successfully.`, 'success');
+  };
 
   const allNoteTags = useMemo(() => {
     const tagsSet = new Set<string>();
@@ -283,15 +304,14 @@ function App() {
       const baseFiltered = materials.filter(material => {
           if (currentUser?.role !== 'admin' && !material.isApproved) return false;
           let viewMatch = false;
-          if (currentView === 'materials') viewMatch = material.type === MaterialType.ModelPaper || material.type === MaterialType.Assignment;
+          if (currentView === 'materials') viewMatch = true; // Show all types
           else if (currentView === 'notes') viewMatch = material.type === MaterialType.Notes;
-          else if (currentView === 'questionBank') viewMatch = material.type === MaterialType.PYQ;
-          else if (['home', 'downloads', 'addEditNote'].includes(currentView)) viewMatch = true;
+          else if (['home', 'downloads', 'addEditNote', 'profile', 'admin', 'settings', 'howToUse', 'privacyPolicy'].includes(currentView)) viewMatch = true;
           return viewMatch;
       });
 
       if (currentView === 'notes') {
-          let notes = baseFiltered;
+          let notes = baseFiltered.filter(m => m.type === MaterialType.Notes);
           // Apply tag filter
           if (selectedTag && selectedTag !== 'All Tags') {
               notes = notes.filter(note => note.tags?.includes(selectedTag));
@@ -321,15 +341,12 @@ function App() {
 
   }, [materials, searchTerm, currentView, currentUser, notesSearchTerm, selectedTag, currentPage]);
 
-  const handleHeroSearch = useCallback((term: string) => {
-    setSearchTerm(term);
-  }, []);
 
   const renderContent = () => {
     if (isLoading) {
       return (
         <div className="flex justify-center items-center h-96">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
           <p className="ml-4 text-lg font-semibold text-gray-600 dark:text-gray-300">Loading Resources...</p>
         </div>
       );
@@ -345,8 +362,27 @@ function App() {
     }
     
     switch (currentView) {
-        case 'dashboard':
-            return <Dashboard user={currentUser!} />;
+        case 'profile':
+            return <ProfilePage 
+                        user={currentUser} 
+                        materials={materials}
+                        users={users}
+                        onLogout={handleLogout} 
+                        onAdminLoginClick={() => setIsAdminLoginModalOpen(true)}
+                        onLoginClick={() => setIsAuthModalOpen(true)}
+                        setView={setCurrentView}
+                        // Global settings for admin quick controls
+                        announcement={announcement}
+                        onAnnouncementChange={setAnnouncement}
+                        registrationsEnabled={registrationsEnabled}
+                        onRegistrationsToggle={setRegistrationsEnabled}
+                    />;
+        case 'settings':
+            return <SettingsPage theme={theme} setTheme={setTheme} />;
+        case 'howToUse':
+            return <HowToUsePage />;
+        case 'privacyPolicy':
+            return <PrivacyPolicyPage />;
         case 'addEditNote':
             return <AddEditNoteForm
                 note={materials.find(m => m.id === editingNoteId)}
@@ -357,11 +393,11 @@ function App() {
                 }}
             />;
         case 'materials':
-            return (
+             return (
                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8 transition-colors duration-300">
                     <MaterialsList
-                        materials={paginatedMaterials}
-                        title={"General Materials"}
+                        materials={paginatedMaterials.filter(m => m.type !== MaterialType.Notes)}
+                        title={"Study Material"}
                         user={currentUser}
                         onUploadClick={handleUploadClick}
                         onDownload={handleDownloadCount}
@@ -392,79 +428,52 @@ function App() {
                     />
                  </div>
             );
-        case 'questionBank':
-            return (
-                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8 transition-colors duration-300">
-                    <MaterialsList
-                        materials={paginatedMaterials}
-                        title="Question Bank (PYQs)"
-                        user={currentUser}
-                        onUploadClick={handleUploadClick}
-                        onDownload={handleDownloadCount}
-                    />
-                 </div>
-            );
-        case 'downloads':
-            return <DownloadsPage 
-                      materials={materials.filter(m => m.isApproved)} 
-                      currentUser={currentUser} 
-                      onDelete={handleMaterialDelete}
-                      onDownload={handleDownloadCount}
-                    />;
-        case 'forum':
-            return <Forum currentUser={currentUser} />;
         case 'admin':
-            return <AdminDashboard materials={materials} onApproval={handleMaterialApproval} onDelete={handleMaterialDelete} />;
+            if (currentUser?.role !== 'admin') {
+                return <UnauthorizedAccess onGoHome={() => setCurrentView('home')} />;
+            }
+            return <AdminDashboard 
+                        materials={materials} 
+                        onApproval={handleMaterialApproval} 
+                        onDelete={handleMaterialDelete}
+                        // Global Settings Props
+                        announcement={announcement}
+                        onAnnouncementChange={setAnnouncement}
+                        registrationsEnabled={registrationsEnabled}
+                        onRegistrationsToggle={setRegistrationsEnabled}
+                        // User Management Props
+                        users={users}
+                        currentUser={currentUser}
+                        onUserRoleChange={handleUserRoleChange}
+                    />;
         case 'home':
         default:
-            return (
-              <>
-                <Hero onSearch={handleHeroSearch} />
-                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8 transition-colors duration-300">
-                       <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">Featured Resources</h2>
-                        <MaterialsList
-                            materials={materials.filter(m => m.isApproved).slice(0, 4)}
-                            title="Recent Uploads"
-                            user={currentUser}
-                            onUploadClick={handleUploadClick}
-                            onDownload={handleDownloadCount}
-                        />
-                    </div>
-                </div>
-              </>
-            );
+            return <HomeContent setView={setCurrentView} />;
     }
   }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-200">
       <Toast notification={toast} onClose={() => setToast(null)} />
-      <div className="flex h-screen">
-        <Sidebar 
-            user={currentUser} 
-            currentView={currentView} 
-            setView={setCurrentView}
-            isOpen={isSidebarOpen}
-            setIsOpen={setSidebarOpen}
-            onUploadClick={handleUploadClick}
+      <div className="flex flex-col h-screen">
+       <Header 
+          user={currentUser} 
+          onLoginClick={() => setIsAuthModalOpen(true)}
+          onLogout={handleLogout}
+          theme={theme}
+          setTheme={setTheme}
         />
-        <div className="flex-1 flex flex-col overflow-hidden">
-           <Header 
-              user={currentUser} 
-              onLoginClick={() => setIsAuthModalOpen(true)}
-              onLogout={handleLogout}
-              onMenuClick={() => setSidebarOpen(!isSidebarOpen)}
-              theme={theme}
-              setTheme={setTheme}
-            />
-            <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-                <div className="container mx-auto px-6 py-8">
-                    {renderContent()}
+        <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+             {announcement.active && announcement.message && (
+                <div className="bg-yellow-100 dark:bg-yellow-900/50 border-b-2 border-yellow-300 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200 p-3 text-center text-sm font-semibold">
+                    {announcement.message}
                 </div>
-            </main>
-            <Footer onAdminLoginClick={() => setIsAdminLoginModalOpen(true)} />
-        </div>
+            )}
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {renderContent()}
+            </div>
+        </main>
+        <BottomNavBar currentView={currentView} setView={setCurrentView} />
       </div>
       
       <AIAssistant isOpen={isAiAssistantOpen} setIsOpen={setIsAiAssistantOpen} />
@@ -473,6 +482,7 @@ function App() {
         onClose={() => setIsAuthModalOpen(false)}
         onLogin={handleUserLogin}
         onRegister={handleUserRegister}
+        registrationsEnabled={registrationsEnabled}
       />
       <AdminLoginModal
         isOpen={isAdminLoginModalOpen}

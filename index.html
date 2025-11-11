@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EDUSPPU 2024 - SPPU Study Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0",
+    "@testing-library/jest-dom": "https://aistudiocdn.com/@testing-library/jest-dom@^6.9.1",
+    "@testing-library/react": "https://aistudiocdn.com/@testing-library/react@^16.3.0",
+    "@jest/globals": "https://aistudiocdn.com/@jest/globals@^30.2.0"
+  }
+}
+</script>
+ <style>
+    :root {
+      /* New Color Palette */
+      --primary: #007BFF;
+      --primary-dark: #0056b3;
+      --header-start: #007BFF;
+      --header-end: #0056b3;
+      --text-light: #F8F9FA;
+      --text-dark: #343A40;
+      
+      --radius: 0.75rem; /* Slightly larger radius */
+      --shadow-sm: 0 2px 4px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.1), 0 2px 6px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 20px -3px rgb(0 0 0 / 0.1), 0 4px 8px -4px rgb(0 0 0 / 0.1);
+      --transition-fast: all 0.2s ease-in-out;
+    }
+    
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      /* Account for bottom nav bar */
+      padding-bottom: 60px;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #ffffff;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 40;
+    }
+    .dark .bottom-nav {
+      background-color: #1f2937; /* gray-800 */
+      border-top-color: #374151; /* gray-700 */
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #6b7280; /* gray-500 */
+      transition: var(--transition-fast);
+    }
+    .nav-item.active {
+      color: var(--primary);
+    }
+    .dark .nav-item.active {
+      color: #60a5fa; /* blue-400 */
+    }
+
+
+    /* Home Grid Card Styles */
+    .home-grid-card {
+      padding: 1rem;
+      border-radius: var(--radius);
+      color: white;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease-in-out;
+    }
+    .home-grid-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Modal Animation */
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-content {
+      animation: fadeInScale 0.2s ease-out forwards;
+    }
+
+    /* Modern Form Styles */
+    .form-input, .form-select, .form-textarea {
+        display: block;
+        width: 100%;
+        padding: 0.65rem 0.75rem;
+        border: 1px solid #D1D5DB; /* gray-300 */
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-fast);
+        background-color: transparent;
+    }
+    .dark .form-input, .dark .form-select, .dark .form-textarea {
+        border-color: #4B5563; /* gray-600 */
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+      }
+      h1, .text-4xl {
+        font-size: 2.25rem; /* ~36px */
+      }
+       h2, .text-3xl {
+        font-size: 1.875rem; /* ~30px */
+      }
+    }
+  </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
